@@ -2,4 +2,4 @@
 * text=auto
 
 output/** binary
-** export-ignore
+output export-ignore
