@@ -13,5 +13,5 @@ python -m venv venv
 . .\venv\Scripts\Activate.ps1
 python.exe -m pip install --upgrade pip
 pip install wheel
-pip install auto-py-to-exe pyttsx3 aiorun
+pip install auto-py-to-exe pyttsx3 aiorun colorama
 deactivate

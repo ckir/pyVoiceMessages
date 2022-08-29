@@ -4,6 +4,9 @@ import json
 import datetime
 import argparse
 import pyttsx3
+from colorama import init, Fore, Back, Style
+init()
+print(Style.RESET_ALL)
 
 engine = pyttsx3.init()
 background_tasks = set()
@@ -12,7 +15,7 @@ verbose_mode = False
 
 
 async def voice_message(message):
-    print("{ts} Just said: '{m}'".format(ts = datetime.datetime.now().isoformat(), m=message['message']))
+    print(Fore.MAGENTA + "{ts} Just said: '{m}'".format(ts = datetime.datetime.now().isoformat(), m=message['message']))
     # Without the "Warning! " addition the pyttsx3 truncates the message !!!
     engine.setProperty('voice', available_voices[message["voice"]]["voice_id"])
     engine.say("Warning! " + message['message'])
@@ -28,69 +31,70 @@ async def voice_message_repeat(message):
 
 
 async def handle_request(reader, writer):
-    data = await reader.read(8192)
-    message = data.decode()
-    message = json.loads(str(message))
-    pending_tasks = asyncio.all_tasks()
-    pending_tasks_names = []
-    for penging_task in pending_tasks:
-        pending_tasks_names.append(penging_task.get_name())
-    if message["switch"] == "on":
-        if message['message'] not in pending_tasks_names:
-            resp = {
-                "ts": datetime.datetime.now().isoformat(),
-                "response": "Message '{m}' NOT exists. Created".format(m=message['message'])
-            }
-            resp = json.dumps(resp)
-            writer.write(resp.encode())
-            await writer.drain()
-
-            new_message = asyncio.create_task(
-                voice_message_repeat(message), name=message['message']
-            )
-            background_tasks.add(new_message)
-            new_message.add_done_callback(background_tasks.discard)
-            print("{ts} Created message '{m}'".format(ts = datetime.datetime.now().isoformat(), m=message['message']))
-            await new_message
-        else:
-            msg = "Message '{m}' already exists. Ignoring".format(m=message['message'])
-            resp = {
-                "ts": datetime.datetime.now().isoformat(),
-                "response": msg
-            }
-            resp = json.dumps(resp)
-            writer.write(resp.encode())
-            writer.write(resp)
-            if verbose_mode:
-                print(datetime.datetime.now().isoformat(), msg)
-            await writer.drain()
-    if message["switch"] == "off":
-        if message['message'] in pending_tasks_names:
-            for task in asyncio.all_tasks():
-                if message['message'] == task.get_name():
-                    resp = {
-                        "ts": datetime.datetime.now().isoformat(),
-                        "response": "Message '{m}' canceled".format(m=message['message'])
-                    }
-                    resp = json.dumps(resp)
-                    writer.write(resp.encode())
-                    writer.write(data)
-                    await writer.drain()
-                    task.add_done_callback(background_tasks.discard)
-                    print("{ts} Canceled message '{m}'".format(ts = datetime.datetime.now().isoformat(), m=message['message']))
-                    task.cancel()
-        else:
-            resp = {
+    try:
+        data = await reader.read(8192)
+        message = data.decode()
+        message = json.loads(str(message))
+        pending_tasks = asyncio.all_tasks()
+        pending_tasks_names = []
+        for penging_task in pending_tasks:
+            pending_tasks_names.append(penging_task.get_name())
+        if message["switch"] == "on":
+            if message['message'] not in pending_tasks_names:
+                resp = {
                     "ts": datetime.datetime.now().isoformat(),
-                    "response": "Message '{m}' not found".format(m=message['message'])
-                    }
-            resp = json.dumps(resp)
-            writer.write(resp.encode())
-            writer.write(data)
-            print( "Message '{m}' not found".format(m=message['message']))
-            await writer.drain()
-    writer.close()
+                    "response": "Message '{m}' NOT exists. Created".format(m=message['message'])
+                }
+                resp = json.dumps(resp)
+                writer.write(resp.encode())
+                await writer.drain()
 
+                new_message = asyncio.create_task(
+                    voice_message_repeat(message), name=message['message']
+                )
+                background_tasks.add(new_message)
+                new_message.add_done_callback(background_tasks.discard)
+                print(Fore.GREEN + "{ts} Created message '{m}'".format(ts = datetime.datetime.now().isoformat(), m=message['message']))
+                await new_message
+            else:
+                msg = "Message '{m}' already exists. Ignoring".format(m=message['message'])
+                resp = {
+                    "ts": datetime.datetime.now().isoformat(),
+                    "response": msg
+                }
+                resp = json.dumps(resp)
+                writer.write(resp.encode())
+                if verbose_mode:
+                    print(Fore.MAGENTA + datetime.datetime.now().isoformat(), msg)
+                await writer.drain()
+        if message["switch"] == "off":
+            if message['message'] in pending_tasks_names:
+                for task in asyncio.all_tasks():
+                    if message['message'] == task.get_name():
+                        resp = {
+                            "ts": datetime.datetime.now().isoformat(),
+                            "response": "Message '{m}' canceled".format(m=message['message'])
+                        }
+                        resp = json.dumps(resp)
+                        writer.write(resp.encode())
+                        writer.write(data)
+                        await writer.drain()
+                        task.add_done_callback(background_tasks.discard)
+                        print(Fore.YELLOW + "{ts} Canceled message '{m}'".format(ts = datetime.datetime.now().isoformat(), m=message['message']))
+                        task.cancel()
+            else:
+                resp = {
+                        "ts": datetime.datetime.now().isoformat(),
+                        "response": "Message '{m}' not found".format(m=message['message'])
+                        }
+                resp = json.dumps(resp)
+                writer.write(resp.encode())
+                writer.write(data)
+                print( Fore.WHITE + datetime.datetime.now().isoformat(), "Message '{m}' not found".format(m=message['message']))
+                await writer.drain()
+        writer.close()
+    except Exception as e:
+        print( Fore.RED + datetime.datetime.now().isoformat(), str(e))
 
 async def main():
     parser = argparse.ArgumentParser()
@@ -125,3 +129,5 @@ async def main():
         await server.wait_closed()
 
 run(main())
+print(Style.RESET_ALL)
+
