@@ -153,5 +153,9 @@ cython_debug/
 .output
 output/
 .backup
+Virus_false_positives_disclaimer.txt
+README.md.backup
+
+
 
 
