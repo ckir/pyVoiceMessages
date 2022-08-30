@@ -152,10 +152,6 @@ cython_debug/
 #.idea/
 .output
 output/
-.backup
 Virus_false_positives_disclaimer.txt
+*.backup
 README.md.backup
-
-
-
-
