@@ -3,21 +3,37 @@ from aiorun import run
 import json
 import datetime
 import argparse
+import sys
+import os
 import pyttsx3
 from colorama import init, Fore, Back, Style
 init()
 print(Style.RESET_ALL)
 
-engine = pyttsx3.init()
+try:
+    engine = pyttsx3.init()
+except Exception as e:
+    print("Failed to load pyttsx3. Does your system have audio capabilities?")
+    sys.exit(1)
 background_tasks = set()
 available_voices = {}
 verbose_mode = False
-
+if sys.platform == 'darwin':
+    default_voice = int(os.getenv("PYVOICEMESSAGESVOICE", "0"))
+elif sys.platform == 'win32':
+    default_voice = int(os.getenv("PYVOICEMESSAGESVOICE", "0"))
+else:
+    default_voice = int(os.getenv("PYVOICEMESSAGESVOICE", "12"))
 
 async def voice_message(message):
     print(Fore.MAGENTA + "{ts} Just said: '{m}'".format(ts = datetime.datetime.now().isoformat(), m=message['message']))
     # Without the "Warning! " addition the pyttsx3 truncates the message !!!
-    engine.setProperty('voice', available_voices[message["voice"]]["voice_id"])
+    try:
+        engine.setProperty('voice', available_voices[message["voice"]]["voice_id"])
+    except Exception:
+        print("Voice", message["voice"], "is not available")
+        engine.setProperty('voice', available_voices[default_voice]["voice_id"])
+
     engine.say("Warning! " + message['message'])
     engine.runAndWait()
     # await asyncio.sleep(3600)
@@ -112,11 +128,17 @@ async def main():
     for voice in voices:
         vn = str(voice.name)
         vi = str(voice.id)
-        available_voices[v] = {"voice_name": vn, "voice_id": vi}
-        print(v, voice.name)
+        available_voices[v] = {"voice_name": vn, "voice_id": voice.id }
+        print(v, voice.name, "(", voice.id, ")")
         v = v + 1
+    print()
+    print("Speaking ", available_voices[default_voice]["voice_name"], " (", available_voices[default_voice]["voice_id"], ")")
     server = await asyncio.start_server(handle_request, '127.0.0.1', args.port)
-    engine.setProperty('voice', available_voices[1]["voice_id"])
+    try:
+        engine.setProperty('voice', available_voices[default_voice]["voice_id"])
+    except Exception:
+        print("Voice", default_voice, "is not available")
+        sys.exit(1)
     started_message = 'Serving on {}'.format(server.sockets[0].getsockname())
     engine.say("Warning! " + started_message)
     engine.runAndWait()
