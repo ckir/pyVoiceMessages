@@ -13,7 +13,7 @@ print(Style.RESET_ALL)
 try:
     engine = pyttsx3.init()
 except Exception as e:
-    print("Failed to load pyttsx3. Does your system have audio capabilities?")
+    print(fore.RED + "Failed to load pyttsx3. Does your system have audio capabilities?" + fore.RESET_ALL)
     sys.exit(1)
 background_tasks = set()
 available_voices = {}
@@ -31,7 +31,8 @@ async def voice_message(message):
     try:
         engine.setProperty('voice', available_voices[message["voice"]]["voice_id"])
     except Exception:
-        print("Voice", message["voice"], "is not available")
+        if verbose_mode:
+            print("Voice", message["voice"], "is not available")
         engine.setProperty('voice', available_voices[default_voice]["voice_id"])
 
     engine.say("Warning! " + message['message'])
@@ -70,7 +71,8 @@ async def handle_request(reader, writer):
                 )
                 background_tasks.add(new_message)
                 new_message.add_done_callback(background_tasks.discard)
-                print(Fore.GREEN + "{ts} Created message '{m}'".format(ts = datetime.datetime.now().isoformat(), m=message['message']))
+                if verbose_mode:
+                    print(Fore.GREEN + "{ts} Created message '{m}'".format(ts = datetime.datetime.now().isoformat(), m=message['message']))
                 await new_message
             else:
                 msg = "Message '{m}' already exists. Ignoring".format(m=message['message'])
@@ -96,7 +98,8 @@ async def handle_request(reader, writer):
                         writer.write(data)
                         await writer.drain()
                         task.add_done_callback(background_tasks.discard)
-                        print(Fore.YELLOW + "{ts} Canceled message '{m}'".format(ts = datetime.datetime.now().isoformat(), m=message['message']))
+                        if verbose_mode:
+                            print(Fore.YELLOW + "{ts} Canceled message '{m}'".format(ts = datetime.datetime.now().isoformat(), m=message['message']))
                         task.cancel()
             else:
                 resp = {
@@ -106,7 +109,8 @@ async def handle_request(reader, writer):
                 resp = json.dumps(resp)
                 writer.write(resp.encode())
                 writer.write(data)
-                print( Fore.WHITE + datetime.datetime.now().isoformat(), "Message '{m}' not found".format(m=message['message']))
+                if verbose_mode:
+                    print( Fore.WHITE + datetime.datetime.now().isoformat(), "Message '{m}' not found".format(m=message['message']))
                 await writer.drain()
         writer.close()
     except Exception as e:
@@ -119,7 +123,7 @@ async def main():
                     default=False,
                     action=argparse.BooleanOptionalAction,
                     dest='verbose',
-                    help='Prints the server response'
+                    help='Prints server activity messages'
                     )
     args = parser.parse_args()
     print("Available voices:")
