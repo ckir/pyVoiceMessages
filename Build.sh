@@ -12,6 +12,7 @@ do
   if [ -d "$i" ]; then rm -Rf "$i"; fi
 done
 
+source venv/bin/activate
 pyinstaller --clean --noconfirm --onefile --console pyVoiceMessagesClient.py
 ExitClient=$?
 pyinstaller --clean --noconfirm --onefile --console pyVoiceMessagesServer.py
