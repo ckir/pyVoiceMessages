@@ -32,7 +32,8 @@ $PYTHON -m venv venv
 [ $? = 0 ] && printGreen "Virtual environment created successfully" || ( printRed "Virtual environment build failed"; exit 1 )
 
 source venv/bin/activate
-[ $? = 0 ] && printGreen "Virtual environment activated" || ( printRed "Virtual environment activation failed"; exit 1 )
+PYTHON_ENV=$($PYTHON -c "import sys; sys.stdout.write('1') if hasattr(sys, 'real_prefix') else sys.stdout.write('0')")
+[ $PYTHON_ENV = 1 ] && printGreen "Virtual environment activated" || ( printRed "Virtual environment activation failed"; exit 1 )
 
 printWhite "Upgraging pip"
 $PYTHON -m pip install --upgrade pip
