@@ -32,11 +32,11 @@ $PYTHON -m venv venv
 [ $? = 0 ] && printGreen "Virtual environment created successfully" || ( printRed "Virtual environment build failed"; exit 1 )
 
 source venv/bin/activate
-PYTHON_ENV=$($PYTHON -c "import sys; print(hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix))"
-[ $PYTHON_ENV = True ] && printGreen "Virtual environment activated" || ( printRed "Virtual environment activation failed"; exit 1 )
+PYTHON_ENV=$(python3 -c "import sys; print(hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix))")
+[ $PYTHON_ENV != "False" ] && printGreen "Virtual environment activated" || ( printRed "Virtual environment activation failed"; exit 1 )
 
 printWhite "Upgraging pip"
-$PYTHON -m pip install --upgrade pip
+pip install --upgrade pip
 [ $? = 0 ] && printGreen "Pip upgrated successfully" || ( printRed "Pip upgrade failed"; exit 1 )
 
 printWhite "Installing packages"
