@@ -13,7 +13,7 @@ print(Style.RESET_ALL)
 try:
     engine = pyttsx3.init()
 except Exception as e:
-    print(fore.RED + "Failed to load pyttsx3. Does your system have audio capabilities?" + fore.RESET_ALL)
+    print(Fore.RED + "Failed to load pyttsx3. Does your system have audio capabilities?" + Fore.RESET_ALL)
     sys.exit(1)
 background_tasks = set()
 available_voices = {}
@@ -125,6 +125,12 @@ async def main():
                     dest='verbose',
                     help='Prints server activity messages'
                     )
+    parser.add_argument('-L', '--list',
+                    default=False,
+                    action=argparse.BooleanOptionalAction,
+                    dest='listonly',
+                    help='List available voices and exit'
+                    )                    
     args = parser.parse_args()
     print("Available voices:")
     voices = engine.getProperty('voices')
@@ -137,7 +143,9 @@ async def main():
         v = v + 1
     print()
     print("Speaking ", available_voices[default_voice]["voice_name"], " (", available_voices[default_voice]["voice_id"], ")")
-    server = await asyncio.start_server(handle_request, '127.0.0.1', args.port)
+    if args.listonly:
+        asyncio.get_event_loop().stop()
+    server = await asyncio.start_server(handle_request, '0.0.0.0', args.port)
     try:
         engine.setProperty('voice', available_voices[default_voice]["voice_id"])
     except Exception:
@@ -156,4 +164,3 @@ async def main():
 
 run(main())
 print(Style.RESET_ALL)
-
