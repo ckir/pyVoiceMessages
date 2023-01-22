@@ -41,7 +41,7 @@ pip install --upgrade pip
 
 printWhite "Installing packages"
 pip install wheel
-pip install auto-py-to-exe pyttsx3 aiorun colorama
+pip install auto-py-to-exe pyttsx3 aiorun colorama rich
 [ $? = 0 ] && printGreen "Packages installed successfully" || ( printRed "Packages installation failed"; exit 1 )
 
 printGreen "Environment is Ready"

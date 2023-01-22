@@ -32,6 +32,6 @@ Invoke-Expression "$python -m pip install --upgrade pip"
 # Invoke-Expression "$python -m pip install ordered-set zstandard nuitka"
 Write-Host "Installing packages"
 pip install wheel
-pip install auto-py-to-exe pyttsx3 aiorun colorama
+pip install auto-py-to-exe pyttsx3 aiorun colorama rich
 deactivate
 
