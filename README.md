@@ -1,3 +1,5 @@
+[![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/downloads/release/python-310/)
+[![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-311/)
 # Disclaimer
 The binaries in our releases created using the pyinstaller and therefore are recognized as false positives by many antivirus including windows defender. There is nothing wrong with them however you can build your own from source. Just run the Build script. (The alternative compilers nuitka and py2exe produce more false positives than pyinstaller)
 
@@ -150,6 +152,9 @@ finally
 }
 ```
 
+# Build
+From within an activated environment (see above) run Build.exe if your computer is running windows
+or Build.sh if your computer is running linux.
 
 
 That's it.
