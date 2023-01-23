@@ -17,7 +17,7 @@ When the 'bad' situation happens you will hear a message YOU define for a number
 The server will ignore every additional requests for a message until is completed. Of cource if the situation turns to 'good' you can cancel your message at anytime.
 
 # Usage
-##Server
+## Server
 ```
 pyVoiceMessagesServer.py -h
 
@@ -51,7 +51,7 @@ source ./venv/bin/activate # Activate the virtual environment
 python ./pyVoiceMessagesServer.py 
 ```
 
-##Client
+## Client
 Because of the inconvenience of activating a virtual environment use a binary for client.
 ```
 pyVoiceMessagesClient.py -h
@@ -108,10 +108,14 @@ options:
   -h, --help  show this help message and exit
 ```
 
-### Example
+### Examples
 
 #### Server runs on windows
+![image info](./mdimages/clientlistwindowsserver.png)
+#### Server runs on linux
+![image info](./mdimages/clientlistlinuxserver.png)
 
+#### Use in a script
 ```
 #! /opt/microsoft/powershell/7/pwsh
 param(
