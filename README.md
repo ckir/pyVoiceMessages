@@ -5,7 +5,41 @@ The binaries in our releases created using the pyinstaller and therefore are rec
 This is a small handy utility to help you get notified when your background script/app etc has no way to notify you other than voice aka you are out of network.
 
 # Usage
-First in a terminal start the server (run pyVoiceMessagesServer.exe) and copy the client (pyVoiceMessagesClient.exe) to a folder that is in your path. Thats it. you are good to go. Later you can use nssm or the tool of your choice to install pyVoiceMessagesServer.exe as service.
+Server
+```
+pyVoiceMessagesServer.py -h
+
+usage: pyVoiceMessagesServer.py [-h] [-V | --verbose | --no-verbose] [-L | --list | --no-list] [port]
+
+positional arguments:
+  port                  Port to listen
+
+options:
+  -h, --help            show this help message and exit
+  -V, --verbose, --no-verbose
+                        Prints server activity messages
+  -L, --list, --no-list
+                        List available voices and exit
+```
+
+You can run a binary pyVoiceMessagesServer.exe for windows or pyVoiceMessagesServer for linux or run from source like
+
+Windows Powershell Terminal
+```
+.\create_environment.ps1 # Run this one time only to create a virtual environment
+.\venv\Scripts\Activate.ps1 # Activate the virtual environment
+python .\pyVoiceMessagesServer.py 
+```
+Tip. Use a tool like nssm to run pyVoiceMessagesServer.exe as service
+
+Linux Terminal
+```
+./create_environment.sh # Run this one time only to create a virtual environment
+source ./venv/bin/activate # Activate the virtual environment
+python ./pyVoiceMessagesServer.py 
+```
+
+and copy the client (pyVoiceMessagesClient.exe) to a folder that is in your path. Thats it. you are good to go. Later you can use nssm or the tool of your choice to install pyVoiceMessagesServer.exe as service.
 
 # Example
 Lets say that you have a backgrount script that monitors a number of servers something like the following
