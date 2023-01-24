@@ -85,7 +85,7 @@ async def handle_request(reader, writer):
                 "type": "list",
                 "response": get_voices(),
             }
-            resp = json.dumps(resp)
+            resp = json.dumps(resp) + '<EOF>'
             writer.write(resp.encode())
             await writer.drain()
         else:
@@ -102,7 +102,7 @@ async def handle_request(reader, writer):
                             m=message["message"]
                         ),
                     }
-                    resp = json.dumps(resp)
+                    resp = json.dumps(resp) + '<EOF>'
                     writer.write(resp.encode())
                     await writer.drain()
 
@@ -125,7 +125,7 @@ async def handle_request(reader, writer):
                         m=message["message"]
                     )
                     resp = {"ts": datetime.datetime.now().isoformat(), "response": msg}
-                    resp = json.dumps(resp)
+                    resp = json.dumps(resp) + '<EOF>'
                     writer.write(resp.encode())
                     if verbose_mode:
                         print(Fore.MAGENTA + datetime.datetime.now().isoformat(), msg)
@@ -141,7 +141,7 @@ async def handle_request(reader, writer):
                                     m=message["message"]
                                 ),
                             }
-                            resp = json.dumps(resp)
+                            resp = json.dumps(resp)  + '<EOF>'
                             writer.write(resp.encode())
                             writer.write(data)
                             await writer.drain()
@@ -163,7 +163,7 @@ async def handle_request(reader, writer):
                             m=message["message"]
                         ),
                     }
-                    resp = json.dumps(resp)
+                    resp = json.dumps(resp) + '<EOF>'
                     writer.write(resp.encode())
                     writer.write(data)
                     if verbose_mode:

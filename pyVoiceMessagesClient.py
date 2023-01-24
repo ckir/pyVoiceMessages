@@ -13,13 +13,21 @@ async def tcp_echo_client(command, host, port, message, debug, outputjson):
 
         writer.write(message.encode())
 
-        data = await reader.read(8192)
+        data = await reader.readuntil(b'<EOF>')
         data = data.decode()
+        data = data.strip('<EOF>')
+
         if debug:
             print(datetime.datetime.now().isoformat(), "Server said: %r" % data)
 
         writer.close()
-        data = json.loads(data)
+
+        try:
+            data = json.loads(data)
+        except json.decoder.JSONDecodeError as error:
+            print(error)
+            print(data)
+            raise Exception(error)
         if command == "list":
             if outputjson:
                 print(json.dumps(data["response"], indent=4))
