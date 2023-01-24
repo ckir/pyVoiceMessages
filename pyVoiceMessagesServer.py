@@ -204,7 +204,7 @@ async def main(args):
         print("Voice", default_voice, "is not available")
         sys.exit(1)
     started_message = "Serving on port {}".format(args.port)
-    engine.say("Warning! " + started_message)
+    engine.say(started_message)
     engine.runAndWait()
     print("Serving on {}".format(server.sockets[0].getsockname()))
     try:
