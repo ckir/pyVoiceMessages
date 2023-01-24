@@ -62,7 +62,7 @@ async def voice_message(message):
             print("Voice", message["voice"], "is not available")
         engine.setProperty("voice", available_voices[default_voice]["voice_id"])
 
-    engine.say("Warning! " + message["message"])
+    engine.say(message["message"])
     engine.runAndWait()
     # await asyncio.sleep(3600)
 
