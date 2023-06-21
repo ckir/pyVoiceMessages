@@ -10,7 +10,6 @@ __pycache__/
 .Python
 build/
 develop-eggs/
-dist/
 downloads/
 eggs/
 .eggs/
@@ -158,3 +157,5 @@ README.md.backup
 pyvoice.py
 Client sample.ps1
 /.vscode/
+dist/pyVoiceMessages_Linux_v1.0.0-alpha.zip
+dist/LinuxReadme.txt
