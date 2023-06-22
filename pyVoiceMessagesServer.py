@@ -1,19 +1,10 @@
 import sys
 from colorama import init, Fore, Back, Style
-from tendo import singleton, SingleInstanceException
-# me = singleton.SingleInstance() # will sys.exit(-1) if other instance is running
+from tendo import singleton
 try:
-    try:
-        me = singleton.SingleInstance() # will sys.exit(-1) if other instance is running
-    except SingleInstanceException as e:
-        print(
-            Fore.RED
-            + "Another instance is already running"
-            + Fore.RESET_ALL
-        )
-        sys.exit(1)
-except Exception as e:
-    sys.exit(1)
+    me = singleton.SingleInstance()
+except singleton.SingleInstanceException as e:
+    sys.exit(-1)
 
 import asyncio
 from aiorun import run
