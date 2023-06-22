@@ -28,6 +28,7 @@ printWhite "Cleaning old virtual environment"
 if [ -d "venv" ]; then rm -Rf "venv"; fi
 
 printWhite "Creating virtual environment"
+$PYTHON -m pip cache purge
 $PYTHON -m venv venv
 [ $? = 0 ] && printGreen "Virtual environment created successfully" || ( printRed "Virtual environment build failed"; exit 1 )
 
