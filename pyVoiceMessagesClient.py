@@ -170,7 +170,7 @@ if __name__ == '__main__':
     parser_on.add_argument(
         "-V",
         "--voice",
-        default=1,
+        default=11,
         dest="voice",
         help="Provide how many times to repeat the message. Defaults to 1",
         type=int,
